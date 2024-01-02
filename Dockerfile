@@ -105,8 +105,9 @@ FROM qemu-base AS qemu-toltec
 RUN run_vm.sh -serial null -daemonize && \
     wait_ssh.sh && \
     ssh root@localhost 'systemctl is-system-running --wait || systemctl is-system-running --wait|| echo not ready' && \
+    ssh root@localhost 'systemctl start local-fs.target' && \
     ssh root@localhost 'while ! timedatectl status | grep "synchronized: yes"; do sleep 1; done' && \
-    ssh root@localhost 'systemctl start local-fs.target && sleep 14 && wget https://raw.githubusercontent.com/toltec/toltec/main/scripts/bootstrap/bootstrap  && sed -i "s|wget_remote=http://toltec-dev.org/thirdparty/bin/wget-v1.21.1|wget_remote=https://github.com/Azathothas/Static-Binaries/raw/main/wget/wget_busybox_armv7l_abihf_musl_Linux|" bootstrap && sed -i "s|8798fcdabbe560722a02f95b30385926e4452e2c98c15c2c217583eaa0db30fc|ec215780dc74381fd5464d11b1e8efe9736f332acb237706c90720b4baa641ca|" bootstrap && bash bootstrap' && \
+    ssh root@localhost 'wget http://toltec-dev.org/bootstrap && sed -i "s|wget_remote=http://toltec-dev.org/thirdparty/bin/wget-v1.21.1|wget_remote=https://github.com/Azathothas/Static-Binaries/raw/main/wget/wget_busybox_armv7l_abihf_musl_Linux|" bootstrap && sed -i "s|8798fcdabbe560722a02f95b30385926e4452e2c98c15c2c217583eaa0db30fc|ec215780dc74381fd5464d11b1e8efe9736f332acb237706c90720b4baa641ca|" bootstrap && bash bootstrap' && \
     save_vm.sh && true asdf12
 
 # Step 4: Build rm2fb-client and forwarder
