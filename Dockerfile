@@ -84,6 +84,7 @@ RUN run_vm.sh -serial null -daemonize && \
     wait_ssh.sh && \
     ssh root@localhost 'systemctl mask remarkable-fail' && \
     ssh root@localhost 'systemctl mask xochitl' && \
+    ssh root@localhost 'systemctl start local-fs.target' && \
     save_vm.sh
 
 # Mount to presist rootfs
